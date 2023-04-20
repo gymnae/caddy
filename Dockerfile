@@ -1,5 +1,7 @@
 FROM caddy:builder AS builder
 
+RUN RUN apk add --no-cache nano
+
 RUN xcaddy build \
   --with github.com/lucaslorentz/caddy-docker-proxy/v2 \
   --with github.com/caddy-dns/cloudflare \
