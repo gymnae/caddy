@@ -1,7 +1,5 @@
 FROM caddy:builder AS builder
 
-RUN apk add --no-cache nano
-
 RUN xcaddy build \ 
 #  --with github.com/lucaslorentz/caddy-docker-proxy/v2 \
   --with github.com/caddy-dns/cloudflare \
@@ -10,6 +8,7 @@ RUN xcaddy build \
   --with github.com/RussellLuo/caddy-ext/layer4
 
 FROM caddy:latest
+RUN apk add --no-cache nano
 
 COPY --from=builder /usr/bin/caddy /usr/bin/caddy
 
