@@ -5,9 +5,11 @@ RUN xcaddy build \
   --with github.com/caddy-dns/cloudflare \
   --with github.com/greenpau/caddy-security \
   --with github.com/mholt/caddy-l4 \
-  --with github.com/abiosoft/caddy-yaml
+  --with github.com/abiosoft/caddy-yaml \
+  --with github.com/mastercactapus/caddy2-proxyprotocol
 
 FROM caddy:latest
-RUN apk add --no-cache nano
+RUN apk add --no-cache nano py3-pip
+RUN pip install --user yamllint
 
 COPY --from=builder /usr/bin/caddy /usr/bin/caddy
