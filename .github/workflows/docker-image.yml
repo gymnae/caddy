@@ -23,7 +23,10 @@ jobs:
     if: ${{ github.event_name != 'schedule' || needs.check.outputs.image-needs-updating == 'true' }}
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+      - 
+        name: Checkout
+        uses: actions/checkout@v3
+      -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v2
       -
@@ -43,4 +46,5 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: gymnae/caddy:latest
-    - uses: gautamkrishnar/keepalive-workflow@v1 # using the workflow with default settings
+      - 
+        uses: gautamkrishnar/keepalive-workflow@v1 # using the workflow with default settings
