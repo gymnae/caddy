@@ -26,25 +26,15 @@ jobs:
 
     - name: xcaddy
       run: |
+        export version=$(curl -s "https://api.github.com/repos/caddyserver/caddy/releases/latest" | jq -r .tag_name)
         export GOPATH=$HOME/go
         export PATH=$PATH:$GOPATH/bin
         echo CaddyVer=${version} >>$GITHUB_ENV
         for arch in amd64 arm64
         do
           GOOS=linux GOARCH=${arch} \
-          xcaddy build latest --output caddy_linux-${arch} \
-          --with github.com/caddy-dns/cloudflare \
-          --with github.com/greenpau/caddy-security \
-          --with github.com/mholt/caddy-l4 \
-          --with github.com/abiosoft/caddy-yaml \
-          --with github.com/caddyserver/replace-response \  & 
-          GOOS=freebsd GOARCH=${arch} \
-          xcaddy build latest --output caddy_freebsd-${arch}  \
-          --with github.com/caddy-dns/cloudflare \
-          --with github.com/greenpau/caddy-security \
-          --with github.com/mholt/caddy-l4 \
-          --with github.com/abiosoft/caddy-yaml \
-          --with github.com/caddyserver/replace-response \
+          xcaddy build latest --output caddy_linux-${arch} --with github.com/caddy-dns/cloudflare --with github.com/greenpau/caddy-security --with github.com/mholt/caddy-l4 --with github.com/abiosoft/caddy-yaml --with github.com/caddyserver/replace-response  & 
+          GOOS=freebsd GOARCH=${arch} xcaddy build latest --output caddy_freebsd-${arch} --with github.com/caddy-dns/cloudflare --with github.com/greenpau/caddy-security --with github.com/mholt/caddy-l4 --with github.com/abiosoft/caddy-yaml --with github.com/caddyserver/replace-response
         zstd -k -19 caddy_linux-${arch} -o caddy_linux-${arch}.zst
         zstd -k -19 caddy_freebsd-${arch} -o caddy_freebsd-${arch}.zst
         done
