@@ -1,0 +1,59 @@
+name: caddy
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/binary.yaml'
+  schedule:
+    - cron: "0 0 * * Sat"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Setup Go
+      uses: actions/setup-go@master
+      with:
+        check-latest: true
+
+    - name: install
+      run: |
+        go install github.com/caddyserver/xcaddy/cmd/xcaddy@latest
+
+    - name: xcaddy
+      run: |
+        export version=$(curl -s "https://api.github.com/repos/caddyserver/caddy/releases/latest" | jq -r .tag_name)
+        export GOPATH=$HOME/go
+        export PATH=$PATH:$GOPATH/bin
+        echo CaddyVer=${version} >>$GITHUB_ENV
+        for arch in amd64 arm64 freebsd64
+        do
+          env GOOS=linux GOARCH=${arch} xcaddy build latest \
+            --with github.com/caddy-dns/cloudflare \
+            --with github.com/greenpau/caddy-security \
+            --with github.com/mholt/caddy-l4 \
+            --with github.com/abiosoft/caddy-yaml \
+            --with github.com/caddyserver/replace-response \
+            --output caddy_-${arch}
+        zstd -k -19 caddy_-${arch} -o caddy_-${arch}.zst
+        done
+
+    - name: upload
+      uses: actions/upload-artifact@v2
+      with:
+        name: caddy
+        path: ./
+
+    - name: fin
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        tag: ${{ env.CaddyVer }}
+        body: caddy ${{ env.CaddyVer }}
+        file: ./caddy_-*
+        overwrite: true
+        file_glob: true
