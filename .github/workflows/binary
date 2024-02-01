@@ -30,7 +30,7 @@ jobs:
         export GOPATH=$HOME/go
         export PATH=$PATH:$GOPATH/bin
         echo CaddyVer=${version} >>$GITHUB_ENV
-        for arch in amd64 arm64 freebsd64
+        for arch in amd64 arm64
         do
           env GOOS=linux GOARCH=${arch} xcaddy build latest \
             --with github.com/caddy-dns/cloudflare \
@@ -38,8 +38,18 @@ jobs:
             --with github.com/mholt/caddy-l4 \
             --with github.com/abiosoft/caddy-yaml \
             --with github.com/caddyserver/replace-response \
-            --output caddy_-${arch}
-        zstd -k -19 caddy_-${arch} -o caddy_-${arch}.zst
+            --output caddy_linux-${arch}
+        zstd -k -19 caddy_linux-${arch} -o caddy_linux-${arch}.zst
+        done
+        do
+          env GOOS=freebsd GOARCH=${arch} xcaddy build latest \
+            --with github.com/caddy-dns/cloudflare \
+            --with github.com/greenpau/caddy-security \
+            --with github.com/mholt/caddy-l4 \
+            --with github.com/abiosoft/caddy-yaml \
+            --with github.com/caddyserver/replace-response \
+            --output caddy_freebsd-${arch}
+        zstd -k -19 caddy_freebsd-${arch} -o caddy_freebsd-${arch}.zst
         done
 
     - name: upload
