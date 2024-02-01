@@ -1,13 +1,11 @@
 FROM caddy:builder AS builder
 
 RUN xcaddy build \ 
-  --with github.com/lucaslorentz/caddy-docker-proxy/v2 \
   --with github.com/caddy-dns/cloudflare \
   --with github.com/greenpau/caddy-security \
   --with github.com/mholt/caddy-l4 \
   --with github.com/abiosoft/caddy-yaml \
   --with github.com/caddyserver/replace-response \ 
-  --with github.com/pteich/caddy-tlsconsul
 
 FROM caddy:latest
 RUN apk add --no-cache nano py3-pip ripgrep
