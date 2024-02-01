@@ -52,6 +52,6 @@ jobs:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         tag: ${{ env.CaddyVer }}
         body: caddy ${{ env.CaddyVer }}
-        file: ./caddy_-*
+        file: ./caddy_*
         overwrite: true
         file_glob: true
