@@ -36,7 +36,7 @@ jobs:
         zstd -k -19 caddy_linux-${arch} -o caddy_linux-${arch}.zst
         done
         do
-          env GOOS=freebsd GOARCH=${arch} xcaddy build latest xcaddy build latest --output caddy_linux-${arch} --with github.com/caddy-dns/cloudflare
+          env GOOS=freebsd GOARCH=${arch} xcaddy build latest --output caddy_freebsd-${arch} --with github.com/caddy-dns/cloudflare
         zstd -k -19 caddy_freebsd-${arch} -o caddy_freebsd-${arch}.zst
         done
 
