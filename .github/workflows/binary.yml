@@ -39,6 +39,8 @@ jobs:
           --with github.com/abiosoft/caddy-yaml \
           --with github.com/caddyserver/replace-response \
         zstd -k -19 caddy_linux-${arch} -o caddy_linux-${arch}.zst
+        done
+        for arch in amd64 arm64        
           env GOOS=freebsd GOARCH=${arch} xcaddy build latest --output caddy_freebsd-${arch}  \
           --with github.com/caddy-dns/cloudflare \
           --with github.com/greenpau/caddy-security \
