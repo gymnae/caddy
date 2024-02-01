@@ -33,22 +33,22 @@ jobs:
         for arch in amd64 arm64
         do
           env GOOS=linux GOARCH=${arch} xcaddy build latest \
-            --with github.com/caddy-dns/cloudflare \
-            --with github.com/greenpau/caddy-security \
-            --with github.com/mholt/caddy-l4 \
-            --with github.com/abiosoft/caddy-yaml \
-            --with github.com/caddyserver/replace-response \
-            --output caddy_linux-${arch}
+          --with github.com/caddy-dns/cloudflare \
+          --with github.com/greenpau/caddy-security \
+          --with github.com/mholt/caddy-l4 \
+          --with github.com/abiosoft/caddy-yaml \
+          --with github.com/caddyserver/replace-response \
+          --output caddy_linux-${arch}
         zstd -k -19 caddy_linux-${arch} -o caddy_linux-${arch}.zst
         done
         do
           env GOOS=freebsd GOARCH=${arch} xcaddy build latest \
-            --with github.com/caddy-dns/cloudflare \
-            --with github.com/greenpau/caddy-security \
-            --with github.com/mholt/caddy-l4 \
-            --with github.com/abiosoft/caddy-yaml \
-            --with github.com/caddyserver/replace-response \
-            --output caddy_freebsd-${arch}
+          --with github.com/caddy-dns/cloudflare \
+          --with github.com/greenpau/caddy-security \
+          --with github.com/mholt/caddy-l4 \
+          --with github.com/abiosoft/caddy-yaml \
+          --with github.com/caddyserver/replace-response \
+          --output caddy_freebsd-${arch}
         zstd -k -19 caddy_freebsd-${arch} -o caddy_freebsd-${arch}.zst
         done
 
