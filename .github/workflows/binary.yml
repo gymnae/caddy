@@ -30,7 +30,6 @@ jobs:
         export version=$(curl -s "https://api.github.com/repos/caddyserver/caddy/releases/latest" | jq -r .tag_name)
         export GOPATH=$HOME/go
         export PATH=$PATH:$GOPATH/bin
-        unset GITHUB_ENV
         echo CaddyVer=${version} >>$GITHUB_ENV
         for arch in amd64 arm64
         do
