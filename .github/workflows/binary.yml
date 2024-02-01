@@ -33,21 +33,21 @@ jobs:
         echo CaddyVer=${version} >>$GITHUB_ENV
         for arch in amd64 arm64
         do
-          env GOOS=linux GOARCH=${arch} xcaddy build latest --output caddy_linux-${arch} \
+          GOOS=linux GOARCH=${arch} \
+          xcaddy build latest --output caddy_linux-${arch} \
+          --with github.com/caddy-dns/cloudflare \
+          --with github.com/greenpau/caddy-security \
+          --with github.com/mholt/caddy-l4 \
+          --with github.com/abiosoft/caddy-yaml \
+          --with github.com/caddyserver/replace-response \  & 
+          GOOS=freebsd GOARCH=${arch} \
+          xcaddy build latest --output caddy_freebsd-${arch}  \
           --with github.com/caddy-dns/cloudflare \
           --with github.com/greenpau/caddy-security \
           --with github.com/mholt/caddy-l4 \
           --with github.com/abiosoft/caddy-yaml \
           --with github.com/caddyserver/replace-response \
         zstd -k -19 caddy_linux-${arch} -o caddy_linux-${arch}.zst
-           unset GOOS
-           unset GOARCH
-          env GOOS=freebsd GOARCH=${arch} xcaddy build latest --output caddy_freebsd-${arch}  \
-          --with github.com/caddy-dns/cloudflare \
-          --with github.com/greenpau/caddy-security \
-          --with github.com/mholt/caddy-l4 \
-          --with github.com/abiosoft/caddy-yaml \
-          --with github.com/caddyserver/replace-response \
         zstd -k -19 caddy_freebsd-${arch} -o caddy_freebsd-${arch}.zst
         done
 
