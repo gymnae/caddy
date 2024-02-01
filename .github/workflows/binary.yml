@@ -26,8 +26,6 @@ jobs:
 
     - name: xcaddy
       run: |
-        unset version
-        export version=$(curl -s "https://api.github.com/repos/caddyserver/caddy/releases/latest" | jq -r .tag_name)
         export GOPATH=$HOME/go
         export PATH=$PATH:$GOPATH/bin
         echo CaddyVer=${version} >>$GITHUB_ENV
