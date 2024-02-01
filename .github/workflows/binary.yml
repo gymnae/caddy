@@ -26,9 +26,11 @@ jobs:
 
     - name: xcaddy
       run: |
+        unset version
         export version=$(curl -s "https://api.github.com/repos/caddyserver/caddy/releases/latest" | jq -r .tag_name)
         export GOPATH=$HOME/go
         export PATH=$PATH:$GOPATH/bin
+        unset GITHUB_ENV
         echo CaddyVer=${version} >>$GITHUB_ENV
         for arch in amd64 arm64
         do
@@ -39,9 +41,8 @@ jobs:
           --with github.com/abiosoft/caddy-yaml \
           --with github.com/caddyserver/replace-response \
         zstd -k -19 caddy_linux-${arch} -o caddy_linux-${arch}.zst
-        done
-        for arch in amd64 arm64    
-        do
+           unset GOOS
+           unset GOARCH
           env GOOS=freebsd GOARCH=${arch} xcaddy build latest --output caddy_freebsd-${arch}  \
           --with github.com/caddy-dns/cloudflare \
           --with github.com/greenpau/caddy-security \
