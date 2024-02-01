@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - '.github/workflows/binary.yaml'
+      - '.github/workflows/caddy.yaml'
   schedule:
     - cron: "0 0 * * Sat"
   workflow_dispatch:
@@ -33,23 +33,10 @@ jobs:
         for arch in amd64 arm64
         do
           env GOOS=linux GOARCH=${arch} xcaddy build latest \
-          --with github.com/caddy-dns/cloudflare \
-          --with github.com/greenpau/caddy-security \
-          --with github.com/mholt/caddy-l4 \
-          --with github.com/abiosoft/caddy-yaml \
-          --with github.com/caddyserver/replace-response \
+          --with github.com/imgk/caddy-trojan \
+          --with github.com/caddyserver/forwardproxy@caddy2=github.com/klzgrad/forwardproxy@naive \
           --output caddy_linux-${arch}
         zstd -k -19 caddy_linux-${arch} -o caddy_linux-${arch}.zst
-        done
-        do
-          env GOOS=freebsd GOARCH=${arch} xcaddy build latest \
-          --with github.com/caddy-dns/cloudflare \
-          --with github.com/greenpau/caddy-security \
-          --with github.com/mholt/caddy-l4 \
-          --with github.com/abiosoft/caddy-yaml \
-          --with github.com/caddyserver/replace-response \
-          --output caddy_freebsd-${arch}
-        zstd -k -19 caddy_freebsd-${arch} -o caddy_freebsd-${arch}.zst
         done
 
     - name: upload
@@ -63,7 +50,7 @@ jobs:
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         tag: ${{ env.CaddyVer }}
-        body: caddy ${{ env.CaddyVer }}
-        file: ./caddy_-*
+        body: caddy ${{ env.CaddyVer }} w/ trojan n forwardproxy
+        file: ./caddy_linux-*
         overwrite: true
         file_glob: true
