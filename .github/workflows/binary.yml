@@ -16,7 +16,7 @@ jobs:
     steps:
 
     - name: Setup Go
-      uses: actions/setup-go@mv5
+      uses: actions/setup-go@v5
       with:
         check-latest: true
 
