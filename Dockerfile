@@ -8,7 +8,7 @@ RUN xcaddy build \
   --with github.com/caddyserver/replace-response \
   --with github.com/fvbommel/caddy-combine-ip-ranges
 FROM caddy:latest
-RUN apk add --no-cache nano py3-pip ripgrep
-RUN pip install --user yamllint
+RUN apk add --no-cache nano py3-pip pipx ripgrep
+RUN pipx install --user yamllint
 WORKDIR /etc/caddy
 COPY --from=builder /usr/bin/caddy /usr/bin/caddy
