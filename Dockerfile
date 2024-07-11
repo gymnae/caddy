@@ -9,6 +9,6 @@ RUN xcaddy build \
   --with github.com/fvbommel/caddy-combine-ip-ranges
 FROM caddy:latest
 RUN apk add --no-cache nano py3-pip pipx ripgrep
-RUN pipx install --user yamllint
+RUN pipx install yamllint
 WORKDIR /etc/caddy
 COPY --from=builder /usr/bin/caddy /usr/bin/caddy
