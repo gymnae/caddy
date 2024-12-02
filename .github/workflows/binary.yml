@@ -33,10 +33,10 @@ jobs:
         for arch in amd64 arm64
         do
           GOOS=linux GOARCH=${arch} \
-          xcaddy build latest --output caddy_linux-${arch} --with github.com/mholt/caddy-l4 --with github.com/WeidiDeng/caddy-cloudflare-ip --with github.com/abiosoft/caddy-yaml --with github.com/caddy-dns/cloudflare --with github.com/greenpau/caddy-security --with github.com/caddyserver/replace-response --with github.com/fvbommel/caddy-combine-ip-ranges 
+          xcaddy build latest --output caddy_linux-${arch} --with github.com/mholt/caddy-l4 --with github.com/WeidiDeng/caddy-cloudflare-ip --with github.com/abiosoft/caddy-yaml --with github.com/caddy-dns/cloudflare --with github.com/greenpau/caddy-security --with github.com/caddyserver/replace-response --with github.com/fvbommel/caddy-combine-ip-ranges --with github.com/dunglas/frankenphp/caddy 
           zstd -k -19 caddy_linux-${arch} -o caddy_linux-${arch}.zst
           GOOS=freebsd GOARCH=${arch} \
-          xcaddy build latest --output caddy_freebsd-${arch} --with github.com/mholt/caddy-l4 --with github.com/WeidiDeng/caddy-cloudflare-ip --with github.com/abiosoft/caddy-yaml --with github.com/caddy-dns/cloudflare --with github.com/greenpau/caddy-security --with github.com/caddyserver/replace-response --with github.com/fvbommel/caddy-combine-ip-ranges
+          xcaddy build latest --output caddy_freebsd-${arch} --with github.com/mholt/caddy-l4 --with github.com/WeidiDeng/caddy-cloudflare-ip --with github.com/abiosoft/caddy-yaml --with github.com/caddy-dns/cloudflare --with github.com/greenpau/caddy-security --with github.com/caddyserver/replace-response --with github.com/fvbommel/caddy-combine-ip-ranges --with github.com/dunglas/frankenphp/caddy 
           zstd -k -19 caddy_freebsd-${arch} -o caddy_freebsd-${arch}.zst
         done
 
