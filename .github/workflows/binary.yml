@@ -20,26 +20,57 @@ jobs:
       with:
         check-latest: true
 
+    - name: install brotlilib
+      run: |
+        apt install libbrotli-dev
+
     - name: install
       run: |
         go install github.com/caddyserver/xcaddy/cmd/xcaddy@latest
 
+  #    export version=$(curl -s "https://api.github.com/repos/caddyserver/caddy/releases/latest" | jq -r .tag_name)
+   #    export GOPATH=$HOME/go
+   
     - name: xcaddy
       run: |
-        export version=$(curl -s "https://api.github.com/repos/caddyserver/caddy/releases/latest" | jq -r .tag_name)
-        export GOPATH=$HOME/go
+        export XCADDY_GO_BUILD_FLAGS="-ldflags='-w -s' -tags=nobadger,nomysql,nopgx" \
+        export CGO_CFLAGS=$(php-config --includes) \
+        export CGO_LDFLAGS="$(php-config --ldflags) $(php-config --libs)" \
         export PATH=$PATH:$GOPATH/bin
         echo CaddyVer=${version} >>$GITHUB_ENV
+        export CGO_ENABLED=1
         for arch in amd64 arm64
         do
           GOOS=linux GOARCH=${arch} \
-          xcaddy build latest --output caddy_linux-${arch} --with github.com/mholt/caddy-l4 --with github.com/WeidiDeng/caddy-cloudflare-ip --with github.com/abiosoft/caddy-yaml --with github.com/caddy-dns/cloudflare --with github.com/greenpau/caddy-security --with github.com/caddyserver/replace-response --with github.com/fvbommel/caddy-combine-ip-ranges --with github.com/dunglas/frankenphp/caddy 
+          xcaddy build latest --output caddy_linux-${arch} \
+            --with github.com/dunglas/frankenphp/caddy \
+            --with github.com/dunglas/mercure/caddy \
+            --with github.com/dunglas/vulcain/caddy \
+            --with github.com/dunglas/caddy-cbrotli
+            --with github.com/mholt/caddy-l4 \
+            --with github.com/WeidiDeng/caddy-cloudflare-ip \
+            --with github.com/abiosoft/caddy-yaml \
+            --with github.com/caddy-dns/cloudflare \
+            --with github.com/greenpau/caddy-security \
+            --with github.com/caddyserver/replace-response \
+            --with github.com/fvbommel/caddy-combine-ip-ranges
           zstd -k -19 caddy_linux-${arch} -o caddy_linux-${arch}.zst
           GOOS=freebsd GOARCH=${arch} \
-          xcaddy build latest --output caddy_freebsd-${arch} --with github.com/mholt/caddy-l4 --with github.com/WeidiDeng/caddy-cloudflare-ip --with github.com/abiosoft/caddy-yaml --with github.com/caddy-dns/cloudflare --with github.com/greenpau/caddy-security --with github.com/caddyserver/replace-response --with github.com/fvbommel/caddy-combine-ip-ranges --with github.com/dunglas/frankenphp/caddy 
+          xcaddy build latest --output caddy_freebsd-${arch} \
+            --with github.com/dunglas/frankenphp/caddy \
+            --with github.com/dunglas/mercure/caddy \
+            --with github.com/dunglas/vulcain/caddy \
+            --with github.com/dunglas/caddy-cbrotli
+            --with github.com/mholt/caddy-l4 \
+            --with github.com/WeidiDeng/caddy-cloudflare-ip \
+            --with github.com/abiosoft/caddy-yaml \
+            --with github.com/caddy-dns/cloudflare \
+            --with github.com/greenpau/caddy-security \
+            --with github.com/caddyserver/replace-response \
+            --with github.com/fvbommel/caddy-combine-ip-ranges \
           zstd -k -19 caddy_freebsd-${arch} -o caddy_freebsd-${arch}.zst
         done
-
+        
     - name: upload
       uses: actions/upload-artifact@v4
       with:
