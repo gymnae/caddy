@@ -6,7 +6,8 @@ RUN xcaddy build \
   --with github.com/abiosoft/caddy-yaml \
   --with github.com/WeidiDeng/caddy-cloudflare-ip \
   --with github.com/caddyserver/replace-response \
-  --with github.com/fvbommel/caddy-combine-ip-ranges
+  --with github.com/fvbommel/caddy-combine-ip-ranges \
+  --with github.com/dunglas/frankenphp/caddy
 FROM caddy:latest
 RUN apk add --no-cache nano py3-pip pipx ripgrep
 RUN pipx install yamllint
